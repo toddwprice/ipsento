@@ -1,0 +1,15 @@
+{
+  "name": "Ipsento-Data-Reader",
+  "version": "1.0.0",
+  "description": "Reads serial data from the Arduino-based Ipsento Data Logger",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Todd Price",
+  "license": "ISC",
+  "dependencies": {
+    "serialport": "^1.5.0"
+  }
+}
