@@ -1,20 +1,18 @@
-var sp = require("serialport");
+var sp    = require("serialport"),
+    redis = require("redis"),
+    client = redis.createClient(),
+    serialPort = new sp.SerialPort("/dev/cu.usbserial-A5026YSX", {
+      baudrate: 9600,
+      parser: sp.parsers.readline("\n")
+    });
 
-var serialPort = new sp.SerialPort("/dev/cu.usbserial-A5026YSX", {
-  baudrate: 9600,
-  parser: sp.parsers.readline("\n")
-});
-
+var start = null;
 
 var processData = function() {
   serialPort.on("open", function () {
-    console.log('open');
+    console.log('serial port open');
     serialPort.on('data', function(data) {
-      // incoming += data;
-      // if (incoming.indexOf("\r")>=0) {
-        //we got the end of the message - parse it
-        processMessage(data);
-      // }
+      processMessage(data);
     });
   });
 };
@@ -23,11 +21,18 @@ var processMessage = function(incoming) {
   try {
     var message = JSON.parse(incoming);
     message.dateTime = new Date();
+    if (start == null) start = new Date();
+    message.key = message.dateTime.getTime() -  start.getTime();
     console.log(message);
+    addToRedis(message);
   }
   catch(e) {
     console.log('error', e);
   }
+};
+
+var addToRedis = function(message) {
+   client.set(message.key, JSON.stringify(message), redis.print);
 };
 
 var listPorts = function(next) {
@@ -43,5 +48,4 @@ var listPorts = function(next) {
 
 listPorts(function() { 
   processData();
-  // process.exit();
 });
