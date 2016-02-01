@@ -7,14 +7,23 @@
 #define DO   2
 #define CS   3
 #define CLK  4
-#define CS2  5
+//#define CS2  5
 Adafruit_MAX31855 thermocouple(CLK, CS, DO);
-Adafruit_MAX31855 thermocouple2(CLK, CS2, DO);
+//Adafruit_MAX31855 thermocouple2(CLK, CS2, DO);
 
 /* ====================================
  * PRESSURE GAUGE
  * ----------------------------------*/
-#define PSI_IN  A5
+#define PSI_IN  A3  //do not use A4 or A5! They double as a SDA and SCL which is used by TMP007
+
+
+/* ====================================
+ * IR TEMPERATURE
+ * ----------------------------------*/
+#include <Wire.h>
+#include "Adafruit_TMP007.h"
+Adafruit_TMP007 tmp007;
+
 
 /* ====================================
  * HUMIDITY AND TEMP
@@ -58,7 +67,7 @@ float psiAvg = 0;
 
 void setup(void) {
   Serial.begin(9600);
-  //Serial.println("...Ipsento Data Logger...");
+  Serial.println("...Ipsento Data Logger...");
   //dht.begin();
   //baro.begin();
   //analogReference(INTERNAL);
@@ -67,6 +76,13 @@ void setup(void) {
   for (int thisReading = 0; thisReading < numReadings; thisReading++)
     readings[thisReading] = 0; 
 
+  //initialize TMP007 IR sensor
+  if (! tmp007.begin(TMP007_CFG_4SAMPLE)) {
+    Serial.println("No TMP007 sensor found");
+    while (1);
+  }
+  
+  
   delay(500); //wait for chip to stabilize
 }
 
@@ -79,17 +95,19 @@ void loop(void) {
   float beanTemp = 0;
   while (beanTemp == 0) {
     beanTemp = thermocouple.readFarenheit();
-    if (isnan(beanTemp)) beanTemp = 0;
+    if (isnan(beanTemp)) beanTemp = -1;
   }
 
   /* ====================================
    * THERMOCOUPLE 2 - outside drum temp
    * ----------------------------------*/
+   /*
   float drumTemp = 0;
   while (drumTemp == 0) {
     drumTemp = thermocouple2.readFarenheit();
-    if (isnan(drumTemp)) drumTemp = 0;
+    if (isnan(drumTemp)) drumTemp = -1;
   }
+  */
   
   /* ====================================
    * PRESSURE GAUGE
@@ -122,6 +140,13 @@ void loop(void) {
     
     delay(2);
   }
+
+
+  /* ====================================
+   * DRUM TEMP WITH IR SENSOR
+   * ----------------------------------*/
+   float drumTemp = (tmp007.readObjTempC() * 9/5) + 32;
+   float roomTemp = (tmp007.readDieTempC() * 9/5) + 32;
 
 
   /* ====================================
@@ -170,8 +195,8 @@ void loop(void) {
   Serial.print(psiAvg);
 //  Serial.print(", \"humidity\":");
 //  Serial.print(humidity);  
-//  Serial.print(", \"roomTemp\":");
-//  Serial.print(roomTemp);  
+  Serial.print(", \"roomTemp\":");
+  Serial.print(roomTemp);  
 //  Serial.print(", \"heatIndex\":");
 //  Serial.print(heatIndex);    
 //  Serial.print(", \"inchesHg\":");
