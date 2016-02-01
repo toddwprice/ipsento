@@ -1,0 +1,14 @@
+{
+  "list": [
+    "index.html",
+    "config.js",
+    "favicon.ico",
+    "jspm_packages/system.js",
+    "jspm_packages/system-polyfills.js",
+    "jspm_packages/system-csp-production.js",
+    "styles/styles.css",
+    "config/application.json",
+    "jspm_packages/github/**/*",
+    "jspm_packages/npm/**/*"
+  ]
+}

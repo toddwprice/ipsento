@@ -1,0 +1,49 @@
+<template>
+  <require from="./date-format"></require>
+  <require from="./sort"></require>
+
+  <section class="au-animate">
+    <h2>
+      <i class="fa fa-users"></i>
+      Jobs
+    </h2>
+
+    <div class="toolbar">
+      <a click.trigger="refreshJobs()" style="cursor:pointer;">
+        <i class="fa fa-refresh"></i>
+        Refresh
+      </a>
+      <span style="font-size:15px;font-weight:normal;font-style:italic;padding-left:30px;">
+        last updated: ${jobsLastUpdated | dateFormat:'h:mm:ss a'}
+      </span>
+    </div>
+
+
+    <table class="pure-table">
+      <thead>
+        <tr>
+          <th>id</th>
+          <th>customer</th>
+          <th>user</th>
+          <th>folder</th>
+          <th>items</th>
+          <th>date created</th>
+          <th>guid</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr repeat.for="job of jobs | sort:'id':'descending'"
+          class="clickable-row"
+          click.trigger="jobDetails(job.id)">
+          <td><a href="#/jobs/${job.id}">${job.id}</a></td>
+          <td>${job.client_name}</td>
+          <td>${job.user_name}</td>
+          <td>${job.folder_name}</td>
+          <td>${job.item_count}</td>
+          <td>${job.created_date | dateFormat:'ddd M/D/YYYY hh:mm:ss'} UTC</td>
+          <td>${job.guid}</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</template>

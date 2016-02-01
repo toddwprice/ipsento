@@ -1,0 +1,13 @@
+<template>
+  <section class="au-animate">
+    <h2>
+      <i class="fa fa-users"></i>
+      Accounts
+    </h2>
+    <table>
+      <tr repeat.for="account of accounts">
+        <td><a href="#/accounts/${account.id}">${account.client_name}</a></td>
+      </tr>
+    </table>
+  </section>
+</template>
