@@ -195,7 +195,7 @@ void loop(void) {
   Serial.print(psiAvg);
 //  Serial.print(", \"humidity\":");
 //  Serial.print(humidity);  
-  Serial.print(", \"roomTemp\":");
+  Serial.print(", \"rt\":");
   Serial.print(roomTemp);  
 //  Serial.print(", \"heatIndex\":");
 //  Serial.print(heatIndex);    

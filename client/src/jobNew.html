@@ -1,0 +1,61 @@
+<template>
+  <require from="./date-format"></require>
+
+  <section class="au-animate">
+    <h2>
+      <i class="fa fa-fire"></i>
+      New Roast Job
+    </h2>
+
+    <form class="pure-form pure-form-stacked" if.bind="!isReady">
+        <fieldset>
+
+            <label for="operator">Operator</label>
+            <select value.bind="operator" id="operator">
+              <option value="">-- select operator --</option>
+              <option repeat.for="operator of operators">${operator}</option>
+            </select>
+
+            <label for="beanDescription">Bean Description</label>
+            <input id="beanDescription" type="text" style="width: 500px; max-width: 100%" placeholder="enter bean description" value.bind="beanDescription">
+
+            <a class="button" style="margin-top:35px" click.trigger="ready()"><i class="fa fa-check"></i> Ready</a>
+        </fieldset>
+    </form>
+
+    <div class="toolbar" if.bind="isReady">
+      <a if.bind="!jobRunning" click.trigger="edit()"><i class="fa fa-gear"></i> settings</a>
+      <a if.bind="!jobRunning" click.trigger="startJob()"><i class="fa fa-play"></i> start</a>
+      <a if.bind="jobRunning" click.trigger="stopJob()"><i class="fa fa-stop"></i> stop</a>
+      <a if.bind="canPrint" click.trigger="printJob()"><i class="fa fa-print"></i> print</a>
+
+      <span style="margin-left:30px;display:inline-block">
+        <b>${beanDescription}</b> &mdash; ${operator}
+      </span>
+    </div>
+
+    <div id="chart" style="width:100%;height:500px"></div>
+
+    <table class="pure-table" id="dataStream" if.bind="jobRunning">
+      <thead>
+        <tr>
+          <th>time</th>
+          <th>room</th>
+          <th>drum</th>
+          <th>beans</th>
+          <th>wc</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr repeat.for="row of dataStream">
+          <td>${row.sensor_time | dateFormat:'h:mm:ss a'}</td>
+          <td>${row.roomTemp}</td>
+          <td>${row.drumTemp}</td>
+          <td>${row.beanTemp}</td>
+          <td>${row.waterColumns}</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+</template>

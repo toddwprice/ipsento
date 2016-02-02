@@ -1,4 +1,5 @@
 import {Redirect} from 'aurelia-router';
+import moment from 'moment';
 
 export class App {
   get user() {
@@ -12,13 +13,13 @@ export class App {
     config.title = 'Ipsento';
     // config.addPipelineStep('authorize', AuthorizeStep);
     config.map([
-      {route: '', redirect: 'dashboard'},
-      {route: '/dashboard', name: 'dashboard', moduleId: 'dashboard', nav: true, title: 'Dashboard', auth: true},
-      {route: '/jobs', name: 'jobs', moduleId: 'jobs', nav: true, title: 'Jobs', auth: true},
+      {route: '/', redirect: 'home'},
+      {route: '/home', name: 'home', moduleId: 'home', nav: true, title: 'Home', auth: true},
+      {route: '/jobs', name: 'jobs', moduleId: 'jobs', nav: false, title: 'Jobs', auth: true},
       {route: '/jobs/:id', name: 'job', moduleId: 'job', nav: false, title: 'Job Detail', auth: true},
-      {route: '/jobs/new', name: 'jobNew', moduleId: 'jobNew', nav: false, title: 'New Job', auth: true},
-      {route: '/reports', name: 'reports', moduleId: 'reports', nav: true, title: 'Reports', auth: true},
-      {route: '/tools', name: 'tools', moduleId: 'tools', nav: true, title: 'Tools', auth: true}
+      { route: '/jobs/new', name: 'jobNew', moduleId: 'jobNew', nav: false, title: 'New Job', auth: true },
+      { route: '/settings', name: 'settings', moduleId: 'settings', nav: true, title: 'Settings', auth: true },
+      // {route: '/reports', name: 'repo1`  1`rts', moduleId: 'reports', nav: true, title: 'Reports', auth: true},
     ]);
 
     this.router = router;

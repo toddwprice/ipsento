@@ -1,10 +1,10 @@
-import {inject} from 'aurelia-framework';
+import {inject,router} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-fetch-client';
 import {Configure} from 'aurelia-configuration';
 import {Redirect} from 'aurelia-router';
 import 'fetch';
 
-@inject(HttpClient,Configure)
+@inject(HttpClient,Configure,Router)
 export class Login {
   login_name = "";
   password = "";
@@ -14,7 +14,7 @@ export class Login {
   }
 
 
-  constructor(http,config) {
+  constructor(http,config,router) {
     http.configure(cfg => {
       cfg
         .useStandardConfiguration()
@@ -22,6 +22,7 @@ export class Login {
     });
 
     this.http = http;
+    this.router = router;
   }
 
   submit() {
@@ -44,7 +45,7 @@ export class Login {
 
         if (user.claims.CAN_ACCESS_ADMIN_APP) {
           window.localStorage.currentUser = JSON.stringify(user);
-          location.href = '/#/dashboard';
+          this.router.navigateToRoute('home');
         }
         else {
           this.error = "Access denied."

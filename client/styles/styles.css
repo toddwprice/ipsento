@@ -8,6 +8,7 @@
 
 body {
   margin: 0;
+  color: #55504A !important;
 }
 
 .splash {
@@ -22,6 +23,7 @@ body {
   text-shadow: rgba(0, 0, 0, 0.5) 0 0 15px;
   text-transform: uppercase;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #55504A;
 }
 
 .splash .fa-spinner {
@@ -216,10 +218,30 @@ section {
 
 .navbar-brand {
   padding: 5px 20px 5px 7px !important;
+  color: #55504A;
 }
 
 .bar-pct {
   display: inline-block;
   background-color: #39B795;
   height: 11px;
+}
+
+.toolbar a, a.button {
+  cursor:pointer;
+  font-size:15px;
+  margin-right:20px;
+  color: #55504A;
+  display: inline-block;
+  min-width: 100px;
+  padding: 10px 20px;
+  border: solid 1px #55504A;
+  border-radius: 3px;
+}
+
+.toolbar a:hover, a.button:hover {
+  text-decoration: none;
+  background-color: #55504A;
+  color: #fff;
+  border-color: #000;
 }
