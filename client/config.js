@@ -38,6 +38,7 @@ System.config({
     "fetch": "github:github/fetch@0.10.1",
     "font-awesome": "npm:font-awesome@4.5.0",
     "moment": "npm:moment@2.11.1",
+    "numeral": "npm:numeral@1.5.3",
     "pikaday": "github:dbushell/Pikaday@1.4.0",
     "purecss": "npm:purecss@0.6.0",
     "socket.io": "npm:socket.io@1.4.5",
@@ -571,6 +572,9 @@ System.config({
     },
     "npm:moment@2.11.1": {
       "process": "github:jspm/nodelibs-process@0.1.2"
+    },
+    "npm:numeral@1.5.3": {
+      "fs": "github:jspm/nodelibs-fs@0.1.2"
     },
     "npm:options@0.0.6": {
       "fs": "github:jspm/nodelibs-fs@0.1.2"

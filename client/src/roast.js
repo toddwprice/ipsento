@@ -1,8 +1,10 @@
 import {inject} from 'aurelia-framework';
+import moment from 'moment';
 import io from 'socket.io-client';
 
-export class JobNew {
-  operators = [];
+export class Roast {
+  roasterSettings;
+  operators;
   jobRunning = false;
   hasData = false;
   lastUpdated;
@@ -10,7 +12,10 @@ export class JobNew {
   dataStream = [];
   operator = "";
   beanDescription = "";
-
+  roasterId = window.localStorage.roasterId;
+  elapsed = 0;
+  currentTemp;
+  currentPressure;
 
   get user() {
     return JSON.parse(window.localStorage.currentUser);
@@ -20,12 +25,11 @@ export class JobNew {
     return !this.jobRunning && this.hasData;
   }
 
-  // constructor() {
-
-  // }
 
   activate() {
-    this.operators = window.localStorage.operators.split('\n');
+    this.roasterSettings = window.localStorage.roasterSettings ? JSON.parse(window.localStorage.roasterSettings) : {};
+    this.operators = this.roasterSettings.operators ?  this.roasterSettings.operators.split('\n') : [];
+    this.operator = window.localStorage.lastOperator;
   }
 
   // attached() {
@@ -36,23 +40,31 @@ export class JobNew {
     this.isReady = true;
   }
 
-  edit() {
+  editJob() {
     this.isReady = false;
   }
+
+  // toggleDetails() {
+  //   this.showDetails = !this.showDetails;
+  // }
 
   startJob() {
     var self = this;
     this.jobRunning = true;
+    window.localStorage.lastOperator = this.operator;
     this.socket = io('http://localhost:8080');
     var container = document.getElementById("chart");
     var ds = this.dataStream;
     var startTime = new Date();
+
+    console.log(moment());
 
     var
       roomTemp = [],
       drumTemp = [],
       waterColumns = [],
       beanTemp = [];
+
 
     var drawGraph = function () {
       // Draw Graph
@@ -64,26 +76,32 @@ export class JobNew {
       ],
         {
           title : self.beanDescription,
-          subtitle: self.operator + ' - ' + startTime,
-          xaxis : {
-            noTicks : 7,
-            tickFormatter : function (n) { return '('+n+')'; },
-            min : 1,
-            max : 7.5,
+          subtitle: `${self.operator} - ${self.roasterSettings.roasterId} - ${startTime}`,
+          xaxis: {
+            mode: 'time',
+            showMinorLabels: true,
+            ticks: [0, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720, 780, 840, 900, 960, 1020],
+            tickFormatter: function (n) {
+              // return n;
+              return moment('2000-01-01 00:00:00').add(moment.duration(n*1000)).format('mm:ss');
+            },
+            min : 0,
+            max: 1020,
             labelsAngle : 45,
-            title : 'x Axis'
+            title : 'Seconds'
           },
-          yaxis : {
-            max : 500,
+          yaxis: {
+            color: '#E74B00',
+            max : parseInt(self.roasterSettings.tempHigh),
             title : 'Temperature'
           },
           y2axis: {
-            color: '#FF0000',
-            max: 30,
+            color: '#2566B7',
+            max: parseInt(self.roasterSettings.wcHigh),
             title: 'Water Columns'
           },
           grid : {
-            verticalLines : false,
+            verticalLines : true,
             backgroundColor : 'white'
           },
           HtmlText : false,
@@ -96,7 +114,10 @@ export class JobNew {
 
     this.socket.on('dataStream', function (msg) {
       self.dataStream.push(msg);
-      var currentX = ((new Date()) - startTime) / 1000;
+      self.elapsed = (new Date()) - startTime;
+      self.currentTemp = msg.beanTemp;
+      self.currentPressure = msg.waterColumns;
+      var currentX = self.elapsed / 1000;
 
       roomTemp.push([currentX, msg.roomTemp]);
       drumTemp.push([currentX, msg.drumTemp]);

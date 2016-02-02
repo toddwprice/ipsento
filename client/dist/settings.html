@@ -1,13 +1,54 @@
 <template>
+  <style>
+    td input { width: 50px; }
+  </style>
+
   <section>
-    <h2><i class="fa fa-gear"></i> Settings</h2>
+    <form class="pure-form">
+        <fieldset>
 
-    <h3>Operators</h3>
-    <textarea value.bind="operators" style="width: 300px;height:150px;"></textarea>
+            <label for="operators">Operators</label>
+            <textarea value.bind="roasterSettings.operators" style="width: 300px;height:150px;"></textarea>
 
-    <div class="toolbar" style="margin-top:20px;">
-      <a click.trigger="save()"><i class="fa fa-save"></i> save</a>
-    </div>
+            <label for="roasterId">Roaster ID</label>
+            <input id="roasterId" type="text" style="width: 100px; max-width: 100%" placeholder="enter roaster id" value.bind="roasterSettings.roasterId">
+
+            <label>
+              <input type="checkbox" id="showDetails" checked.bind="roasterSettings.showDetails" />
+              show data details during roast
+            </label>
+
+
+            <br/>
+            <br/>
+            <label>Graph Settings</label>
+            <table class="pure-table">
+              <thead>
+              <tr>
+                <th></th>
+                <th>min</th>
+                <th>max</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <th>Temperature</th>
+                <td><input type="text" value.bind="roasterSettings.tempLow" /></td>
+                <td><input type="text" value.bind="roasterSettings.tempHigh" /></td>
+              </tr>
+              <tr>
+                <th>Water Columns</th>
+                <td><input type="text" value.bind="roasterSettings.wcLow" /></td>
+                <td><input type="text" value.bind="roasterSettings.wcHigh" /></td>
+              </tr>
+              </tbody>
+            </table>
+
+
+            <a class="button" style="margin-top:35px" click.trigger="save()"><i class="fa fa-save"></i> Save</a>
+            <span id="message" style="color:#30570F;display:none;"><i class="fa fa-check"></i> Saved</span>
+        </fieldset>
+    </form>
 
   </section>
 </template>
