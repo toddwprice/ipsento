@@ -15,7 +15,8 @@ export class Roast {
   roasterId = window.localStorage.roasterId;
   elapsed = 0;
   currentTemp;
-  currentPressure;
+  currentPsi;
+  currentWc;
 
   get user() {
     return JSON.parse(window.localStorage.currentUser);
@@ -116,7 +117,8 @@ export class Roast {
       self.dataStream.push(msg);
       self.elapsed = (new Date()) - startTime;
       self.currentTemp = msg.beanTemp;
-      self.currentPressure = msg.waterColumns;
+      self.currentPsi = msg.psi;
+      self.currentWc = msg.waterColumns;
       var currentX = self.elapsed / 1000;
 
       roomTemp.push([currentX, msg.roomTemp]);

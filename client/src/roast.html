@@ -27,8 +27,8 @@
         </fieldset>
     </form>
 
-    <div class="toolbar" if.bind="isReady">
-      <div style="display:inline-block;vertical-align:top;margin-top:15px;">
+    <div class="toolbar pure-g" if.bind="isReady">
+      <div class="pure-u-2-5 toolbar-buttons">
         <a if.bind="!jobRunning" click.trigger="startJob()"><i class="fa fa-play"></i> start</a>
         <a if.bind="jobRunning" click.trigger="stopJob()"><i class="fa fa-stop"></i> stop</a>
         <!--<a if.bind="jobRunning" click.trigger="stopJob()"><i class="fa fa-ellipsis-h"></i>
@@ -38,22 +38,27 @@
         <a if.bind="canPrint" click.trigger="printJob()"><i class="fa fa-print"></i> print</a>
         <a if.bind="!jobRunning" click.trigger="editJob()"><i class="fa fa-info"></i> info</a>
       </div>
-
-      <div style="margin-left:150px;display:inline-block;">
+      <div class="pure-u-3-5">
         <table>
           <tr>
             <td>Time:</td>
             <td>Temp (&#8457;):</td>
             <td>Pressure (w.c.):</td>
+            <td>Pressure (PSI):</td>
           </tr>
           <tr>
             <td class="key-metric elapsed">${elapsed | dateFormat:'mm:ss'}</td>
             <td class="key-metric currentTemp">${currentTemp | numberFormat:'0,0.0'}</td>
-            <td class="key-metric currentPressure">${currentPressure | numberFormat:'0,0.0'}</td>
+            <td class="key-metric currentWc">${currentWc | numberFormat:'0,0.0'}</td>
+            <td class="key-metric currentPsi">${currentPsi | numberFormat:'0,0.00'}</td>
           </tr>
         </table>
       </div>
     </div>
+
+      <!--<div class="toolbar-buttons" style="display:inline-block;vertical-align:top;margin-top:15px;">
+      </div>-->
+
 
     <div id="chart" style="width:100%;height:500px"></div>
 

@@ -18,8 +18,8 @@ export class App {
       // {route: '/jobs', name: 'jobs', moduleId: 'jobs', nav: false, title: 'Jobs', auth: true},
       // {route: '/jobs/:id', name: 'job', moduleId: 'job', nav: false, title: 'Job Detail', auth: true},
       // { route: '/jobs/new', name: 'jobNew', moduleId: 'jobNew', nav: false, title: 'New Job', auth: true },
-      { route: '/roast', name: 'roast', moduleId: 'roast', nav: true, title: '<i class="fa fa-fire"></i> Roast', auth: false },
-      { route: '/settings', name: 'settings', moduleId: 'settings', nav: true, title: '<i class="fa fa-gear"></i> Settings', auth: false },
+      { route: '/roast', name: 'roast', moduleId: 'roast', nav: true, title: 'Roast', settings: { html: '<i class="fa fa-fire"></i> Roast' }, auth: false },
+      { route: '/settings', name: 'settings', moduleId: 'settings', nav: true, title: 'Settings', settings: {html: '<i class="fa fa-gear"></i> Settings'}, auth: false },
       // {route: '/reports', name: 'repo1`  1`rts', moduleId: 'reports', nav: true, title: 'Reports', auth: true},
     ]);
 

@@ -1,17 +1,28 @@
 {
-  "name": "Ipsento-Data-Reader",
+  "name": "ipsento-server",
   "version": "1.0.0",
-  "description": "Reads serial data from the Arduino-based Ipsento Data Logger",
+  "description": "Reads serial data from the Arduino-based Ipsento Data Logger and relays data via socket.io",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
   "author": "Todd Price",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
-    "redis": "^0.12.1",
     "serialport": "^1.5.0",
     "socket.io": "^1.4.5"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/toddwprice/ipsento"
+  },
+  "keywords": [
+    "ipsento"
+  ],
+  "bugs": {
+    "url": "https://github.com/toddwprice/ipsento/issues"
+  },
+  "homepage": "https://github.com/toddwprice/ipsento"
 }

@@ -10,7 +10,7 @@
       </button>
       <a class="navbar-brand" href="#">
         <span>
-          <img src="/favicon.ico" style="width:40px;" />
+          <img src="./favicon.ico" style="width:40px;" />
           ${router.title}
           <version />
         </span>
@@ -20,7 +20,7 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
         <li repeat.for="row of router.navigation" class="${row.isActive ? 'active' : ''}">
-          <a data-toggle="collapse" data-target="#bs-example-navbar-collapse-1.in" href.bind="row.href" innerHTML.bind="row.title"></a>
+          <a data-toggle="collapse" data-target="#bs-example-navbar-collapse-1.in" href.bind="row.href" innerHTML.bind="row.settings.html"></a>
         </li>
       </ul>
 

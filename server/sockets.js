@@ -1,12 +1,13 @@
+//NOTE: This file is for sending dummy data for testing only!
 var io = require('socket.io')(8080);
 
 var bottomTemp = 320;
-var beanChange = .05;
+var beanChange = .011;
 var beanDirection = -1;
 var wcDirection = 1;
 var roomTemp = 76.8;
 var drumTemp = 204.2;
-var waterColumns = 11;
+var waterColumns = 4;
 var beanTemp = 406;
 
 
@@ -21,9 +22,9 @@ setInterval(function () {
 
   if (beanTemp < bottomTemp) {
     beanTemp = bottomTemp;
-    beanChange = .009;
+    beanChange = .006;
     beanDirection = 1;
-    waterColumns = 16;
+    waterColumns = 11;
   }
 
   var data = {
@@ -31,6 +32,7 @@ setInterval(function () {
     roomTemp: roomTemp,
     drumTemp: drumTemp,
     waterColumns: waterColumns,
+    psi: waterColumns / 27.6799048425,
     beanTemp: beanTemp
   };
 
