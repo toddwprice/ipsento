@@ -2,8 +2,18 @@ var sp = require("serialport");
 var io = require('socket.io')(8080);
 var serialPort;
 var start = null;
+var pressureReadings = [];
+const pressureAvgCount = 3;
+
   // redis = require("redis"),
   // client = redis.createClient(),
+Array.prototype.sum = Array.prototype.sum || function() {
+  return this.reduce(function(sum, a) { return sum + Number(a) }, 0);
+}
+
+Array.prototype.average = Array.prototype.average || function() {
+  return this.sum() / (this.length || 1);
+}
 
 io.on('connection', function(socket){
   console.log('a user connected');
@@ -24,21 +34,36 @@ var processData = function(portName) {
   });
 };
 
+var getWC = function (psi) {
+  if (psi <= .02) psi = 0;
+  if (pressureReadings.length < pressureAvgCount) {
+    pressureReadings.push(psi);
+  }
+  else {
+    pressureReadings.shift();
+    pressureReadings.push(psi);
+  }
+
+  return pressureReadings.average() * 67;
+};
+
 var processMessage = function(incoming) {
   try {
     var message = JSON.parse(incoming);
     message.dateTime = new Date();
     if (start == null) start = new Date();
     message.key = message.dateTime.getTime() -  start.getTime();
-    console.log(message);
+
     var data = {
       sensor_time: message.dateTime,
       roomTemp: message.roomTemp,
       drumTemp: message.dt,
       psi: message.psi,
-      waterColumns: message.psi * 27.6799048425,
+      waterColumns: getWC(message.psi),
       beanTemp: message.bt
     };
+
+    console.log(data);
 
     //   console.log(data);
     io.emit('dataStream', data);

@@ -42,15 +42,15 @@
         <table>
           <tr>
             <td>Time:</td>
-            <td>Temp (&#8457;):</td>
+            <td>Bean Temp (&#8457;):</td>
+            <td>Roaster Temp (&#8457;):</td>
             <td>Pressure (w.c.):</td>
-            <td>Pressure (PSI):</td>
           </tr>
           <tr>
             <td class="key-metric elapsed">${elapsed | dateFormat:'mm:ss'}</td>
             <td class="key-metric currentTemp">${currentTemp | numberFormat:'0,0.0'}</td>
+            <td class="key-metric currentTemp">${currentDrumTemp | numberFormat:'0,0.0'}</td>
             <td class="key-metric currentWc">${currentWc | numberFormat:'0,0.0'}</td>
-            <td class="key-metric currentPsi">${currentPsi | numberFormat:'0,0.00'}</td>
           </tr>
         </table>
       </div>
