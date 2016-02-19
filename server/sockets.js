@@ -15,23 +15,27 @@ io.on('connection', function(socket){
   console.log('a user connected');
 });
 
+function random (low, high) {
+    return Math.random() * (high - low) + low;
+}
+
 setInterval(function () {
   var time = new Date();
-  beanTemp = beanTemp + (beanTemp * beanChange * beanDirection);
+  beanTemp = beanTemp + (beanTemp * beanChange * beanDirection) + random(-5,5);
   waterColumns = waterColumns * wcDirection;
 
   if (beanTemp < bottomTemp) {
     beanTemp = bottomTemp;
-    beanChange = .006;
+    beanChange = .0025;
     beanDirection = 1;
-    waterColumns = 11;
+    waterColumns = 8.9;
   }
 
   var data = {
     sensor_time: time,
     roomTemp: roomTemp,
     drumTemp: drumTemp,
-    waterColumns: waterColumns,
+    waterColumns: waterColumns + random(-0.1, 0.1),
     psi: waterColumns / 27.6799048425,
     beanTemp: beanTemp
   };

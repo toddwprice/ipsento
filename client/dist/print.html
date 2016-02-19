@@ -1,0 +1,32 @@
+<template>
+
+  <section>
+    <div style="display: inline-block;margin-top:40px;margin-bottom:20px;border: solid 1px #ccc;padding:15px;">
+      <div>Roast ID: ${roast.id}</div>
+      <div>Coffee: ${roast.coffee}</div>
+      <div>Started: ${roast.roastDate}</div>
+      <div>Finished: ${roast.endDate}</div>
+      <div>Equipment: ${roast.roaster}</div>
+      <div>Roaster: ${roast.operator}</div>
+      <div>Weight In: ${roast.weightIn}</div>
+      <div>Weight Out: ${roast.weightOut}</div>
+      <div>Weight Loss %: ${roast.weightLoss}</div>
+      <div>Start Bean Temp: ${roast.startBeanTemp}</div>
+      <div>Start Room Temp: ${roast.startRoomTemp}</div>
+      <div>Start Drum Temp: ${roast.startDrumTemp}</div>
+      <div>End Bean Temp: ${roast.endBeanTemp}</div>
+      <div>End Room Temp: ${roast.endRoomTemp}</div>
+      <div>End Drum Temp: ${roast.endDrumTemp}</div>
+      <div>First Crack: ${roast.firstCrackTime}</div>
+      <div>
+        <img src.bind="roast.graph" />
+      </div>
+    </div>
+
+    <div>
+      <button class="btn primary" click.delegate="printPdf()">Printable PDF</button>
+    </div>
+
+  </section>
+
+</template>

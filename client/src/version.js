@@ -1,3 +1,3 @@
 export class Version {
-versionNumber = "v0.1.0";
+versionNumber = "v1.0.0";
 }

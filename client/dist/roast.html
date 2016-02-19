@@ -7,21 +7,30 @@
     }
   </style>
 
-  <require from="./date-format"></require>
-  <require from="./number-format"></require>
+  <require from="./components/formatters/date-format"></require>
+  <require from="./components/formatters/number-format"></require>
 
   <section class="au-animate" style="margin-top:15px;">
     <form class="pure-form pure-form-stacked" if.bind="!isReady">
         <fieldset>
 
             <label for="operator">Operator</label>
-            <select value.bind="operator" id="operator">
+            <select value.bind="roast.operator" id="operator">
               <option value="">-- select operator --</option>
               <option repeat.for="operator of operators">${operator}</option>
             </select>
 
-            <label for="beanDescription">Bean Description</label>
-            <input id="beanDescription" type="text" style="width: 500px; max-width: 100%" placeholder="enter bean description" value.bind="beanDescription">
+            <label for="coffee">Batch Number</label>
+            <input id="coffee" type="text" style="width: 500px; max-width: 100%" placeholder="batch number" value.bind="roast.id">
+
+            <label for="coffee">Coffee</label>
+            <input id="coffee" type="text" style="width: 500px; max-width: 100%" placeholder="enter coffee description" value.bind="roast.coffee">
+
+            <label for="weightIn">Weight In</label>
+            <input id="weightIn" type="number" step=".01" style="width: 500px; max-width: 100%" placeholder="weight in" value.bind="roast.weightIn">
+
+            <label for="weightOut">Weight Out</label>
+            <input id="weightOut" type="number" step=".01" style="width: 500px; max-width: 100%" placeholder="weight out" value.bind="roast.weightOut">
 
             <a class="button" style="margin-top:35px" click.trigger="ready()"><i class="fa fa-check"></i> Ready</a>
         </fieldset>
@@ -35,6 +44,7 @@
           <span if.bind="!showDetails" click.trigger="toggleDetails()">show details</span>
           <span if.bind="showDetails" click.trigger="toggleDetails()">hide details</span>
         </a>-->
+        <a if.bind="canPrint" click.trigger="saveJob()"><i class="fa fa-save"></i> print</a>
         <a if.bind="canPrint" click.trigger="printJob()"><i class="fa fa-print"></i> print</a>
         <a if.bind="!jobRunning" click.trigger="editJob()"><i class="fa fa-info"></i> info</a>
       </div>
@@ -45,12 +55,18 @@
             <td>Bean Temp (&#8457;):</td>
             <td>Roaster Temp (&#8457;):</td>
             <td>Pressure (w.c.):</td>
+            <td>First Crack:</td>
+            <td>Target end (low):</td>
+            <td>Target end (high):</td>
           </tr>
           <tr>
             <td class="key-metric elapsed">${elapsed | dateFormat:'mm:ss'}</td>
-            <td class="key-metric currentTemp">${currentTemp | numberFormat:'0,0.0'}</td>
+            <td class="key-metric currentTemp">${currentBeanTemp | numberFormat:'0,0.0'}</td>
             <td class="key-metric currentTemp">${currentDrumTemp | numberFormat:'0,0.0'}</td>
             <td class="key-metric currentWc">${currentWc | numberFormat:'0,0.0'}</td>
+            <td class="key-metric currentWc">${roast.firstCrackTime | dateFormat:'mm:ss'}</td>
+            <td class="key-metric currentWc">${roast.firstCrackTime / 0.8 | dateFormat:'mm:ss'}</td>
+            <td class="key-metric currentWc">${roast.firstCrackTime / 0.75 | dateFormat:'mm:ss'}</td>
           </tr>
         </table>
       </div>

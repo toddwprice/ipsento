@@ -1,8 +1,10 @@
 import {inject} from 'aurelia-framework';
+import {Redirect} from 'aurelia-router';
 import moment from 'moment';
 import io from 'socket.io-client';
 
 export class Roast {
+  roast = {};
   roasterSettings;
   operators;
   jobRunning = false;
@@ -10,14 +12,13 @@ export class Roast {
   lastUpdated;
   graph;
   dataStream = [];
-  operator = "";
-  beanDescription = "";
-  roasterId = window.localStorage.roasterId;
   elapsed = 0;
-  currentTemp;
+  currentBeanTemp;
   currentDrumTemp;
+  currentRoomTemp;
   currentPsi;
   currentWc;
+  firstCrackSet = false;
 
   get user() {
     return JSON.parse(window.localStorage.currentUser);
@@ -31,12 +32,13 @@ export class Roast {
   activate() {
     this.roasterSettings = window.localStorage.roasterSettings ? JSON.parse(window.localStorage.roasterSettings) : {};
     this.operators = this.roasterSettings.operators ?  this.roasterSettings.operators.split('\n') : [];
-    this.operator = window.localStorage.lastOperator;
+
+    this.roast = {
+      coffee: null,
+      operator: window.localStorage.lastOperator,
+      roaster: this.roasterSettings.roasterId
+    };
   }
-
-  // attached() {
-
-  // }
 
   ready() {
     this.isReady = true;
@@ -46,14 +48,28 @@ export class Roast {
     this.isReady = false;
   }
 
-  // toggleDetails() {
-  //   this.showDetails = !this.showDetails;
+  // hashCode(str) {
+  //   var hash = 0;
+  //   for (var i = 0; i < str.length; i++) {
+  //       hash = ~~(((hash << 5) - hash) + str.charCodeAt(i));
+  //   }
+  //   return hash.toString(16).toUpperCase();
+  // }
+
+  // get roastId() {
+  //   var retval = (new Date()).getTime() + '-'
+  //   retval += this.roast.coffee.toLowerCase().replace(/\s/g, '') + '-';
+  //   retval += this.roast.operator.replace(/[^A-Z]/g, '') + '-';
+  //   retval += this.roast.roaster;
+  //   return this.hashCode(retval);
   // }
 
   startJob() {
     var self = this;
+    this.roast.roastDate = (new Date()).toUTCString();
+    this.roast.startWc = this.currentWc;
     this.jobRunning = true;
-    window.localStorage.lastOperator = this.operator;
+    window.localStorage.lastOperator = this.roast.operator;
     this.socket = io('http://localhost:8080');
     var container = document.getElementById("chart");
     var ds = this.dataStream;
@@ -74,21 +90,21 @@ export class Roast {
         {data: roomTemp, label: 'room' },
         {data: drumTemp, label: 'drum' },
         {data: beanTemp, label: 'beans' },
-        {data: waterColumns, label: 'wc', lines: {fill: true}, yaxis: 2 }
+        {data: waterColumns, label: 'wc', lines: { fill: true }, yaxis: 2 },
       ],
         {
-          title : self.beanDescription,
-          subtitle: `${self.operator} - ${self.roasterSettings.roasterId} - ${startTime}`,
+          title: self.roast.coffee,
+          subtitle : self.roast.id,
           xaxis: {
             mode: 'time',
             showMinorLabels: true,
-            ticks: [0, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720, 780, 840, 900, 960, 1020],
+            ticks: [0, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720, 780, 840, 900],
             tickFormatter: function (n) {
               // return n;
               return moment('2000-01-01 00:00:00').add(moment.duration(n*1000)).format('mm:ss');
             },
             min : 0,
-            max: 1020,
+            max: 900,
             labelsAngle : 45,
             title : 'Seconds'
           },
@@ -117,7 +133,8 @@ export class Roast {
     this.socket.on('dataStream', function (msg) {
       self.dataStream.push(msg);
       self.elapsed = (new Date()) - startTime;
-      self.currentTemp = msg.beanTemp;
+      self.currentBeanTemp = msg.beanTemp;
+      self.currentRoomTemp = msg.roomTemp;
       self.currentDrumTemp = msg.drumTemp;
       self.currentPsi = msg.psi;
       self.currentWc = msg.waterColumns;
@@ -131,17 +148,40 @@ export class Roast {
 
       self.lastUpdated = new Date();
       self.hasData = true;
+
+      //after 9 minutes start listening for first crack at 395F
+      if (!self.firstCrackSet && self.elapsed > (0 * 60 * 1000) && self.currentBeanTemp >= 395) {
+        console.log('firstCrack:', self.elapsed);
+        self.roast.firstCrackTime = self.elapsed;
+        self.firstCrackSet = true;
+      }
+
+      if (!self.roast.startBeanTemp) {
+        self.roast.startBeanTemp = self.currentBeanTemp;
+        self.roast.startRoomTemp = self.currentRoomTemp;
+        self.roast.startDrumTemp = self.currentDrumTemp;
+      }
+
       drawGraph();
     });
 
   }
 
   stopJob() {
+    this.roast.endBeanTemp = this.currentBeanTemp;
+    this.roast.endRoomTemp = this.currentRoomTemp;
+    this.roast.endDrumTemp = this.currentDrumTemp;
+    this.roast.endWc = this.currentWc;
+    this.roast.endDate = (new Date()).toUTCString();
+    this.roast.elapsed = this.roast.roastDate - this.roast.startDate;
     this.jobRunning = false;
     this.socket.disconnect();
   }
 
-  printJob() {
-    this.graph.download.saveImage('png');
+  saveJob() {
+    this.roast.weightLoss = (this.roast.weightIn - this.roast.weightOut) / this.roast.weightIn;
+    this.roast.graph = this.graph.download.getImageBase64('png');
+    localStorage.lastRoast = JSON.stringify(this.roast);
+
   }
 }
