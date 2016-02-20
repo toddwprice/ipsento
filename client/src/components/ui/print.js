@@ -1,12 +1,11 @@
 /* global pdfMake */
+import {customElement, bindable} from 'aurelia-framework'
 import moment from 'moment';
 import numeral from 'numeral';
 
+@customElement('print')
 export class Print {
-  activate() {
-    this.roast = JSON.parse(localStorage.lastRoast);
-    console.log(this.roast);
-  }
+  @bindable roast;
 
   printPdf() {
     var lbl = function (text) {
@@ -17,6 +16,7 @@ export class Print {
     };
 
     var temp = function (number) {
+      if (!number) return "";
       return numeral(number).format('0,0.0');
     };
 

@@ -9,6 +9,7 @@
 
   <require from="./components/formatters/date-format"></require>
   <require from="./components/formatters/number-format"></require>
+  <require from="./components/ui/print"></require>
 
   <section class="au-animate" style="margin-top:15px;">
     <form class="pure-form pure-form-stacked" if.bind="!isReady">
@@ -37,18 +38,18 @@
     </form>
 
     <div class="toolbar pure-g" if.bind="isReady">
-      <div class="pure-u-2-5 toolbar-buttons">
+      <div class="pure-u-10-24 toolbar-buttons">
         <a if.bind="!jobRunning" click.trigger="startJob()"><i class="fa fa-play"></i> start</a>
         <a if.bind="jobRunning" click.trigger="stopJob()"><i class="fa fa-stop"></i> stop</a>
         <!--<a if.bind="jobRunning" click.trigger="stopJob()"><i class="fa fa-ellipsis-h"></i>
           <span if.bind="!showDetails" click.trigger="toggleDetails()">show details</span>
           <span if.bind="showDetails" click.trigger="toggleDetails()">hide details</span>
         </a>-->
-        <a if.bind="canPrint" click.trigger="saveJob()"><i class="fa fa-save"></i> print</a>
-        <a if.bind="canPrint" click.trigger="printJob()"><i class="fa fa-print"></i> print</a>
+        <a if.bind="canSave" click.trigger="saveJob()"><i class="fa fa-save"></i> save</a>
+        <print if.bind="canPrint" roast.bind="roast" />
         <a if.bind="!jobRunning" click.trigger="editJob()"><i class="fa fa-info"></i> info</a>
       </div>
-      <div class="pure-u-3-5">
+      <div class="pure-u-14-24">
         <table>
           <tr>
             <td>Time:</td>
@@ -77,6 +78,10 @@
 
 
     <div id="chart" style="width:100%;height:500px"></div>
+
+  </section>
+
+  <section>
 
     <table class="pure-table" id="dataStream" if.bind="showDetails">
       <thead>

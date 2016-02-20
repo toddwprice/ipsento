@@ -19,15 +19,19 @@ export class Roast {
   currentPsi;
   currentWc;
   firstCrackSet = false;
+  isSaved = false;
 
   get user() {
     return JSON.parse(window.localStorage.currentUser);
   }
 
-  get canPrint() {
+  get canSave() {
     return !this.jobRunning && this.hasData;
   }
 
+  get canPrint() {
+    return this.isSaved;
+  }
 
   activate() {
     this.roasterSettings = window.localStorage.roasterSettings ? JSON.parse(window.localStorage.roasterSettings) : {};
@@ -182,6 +186,6 @@ export class Roast {
     this.roast.weightLoss = (this.roast.weightIn - this.roast.weightOut) / this.roast.weightIn;
     this.roast.graph = this.graph.download.getImageBase64('png');
     localStorage.lastRoast = JSON.stringify(this.roast);
-
+    this.isSaved = true;
   }
 }
