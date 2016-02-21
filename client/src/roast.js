@@ -97,8 +97,7 @@ export class Roast {
         {data: waterColumns, label: 'wc', lines: { fill: true }, yaxis: 2 },
       ],
         {
-          title: self.roast.coffee,
-          subtitle : self.roast.id,
+          title : self.roast.id,
           xaxis: {
             mode: 'time',
             showMinorLabels: true,

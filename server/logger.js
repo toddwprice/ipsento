@@ -5,8 +5,6 @@ var start = null;
 var pressureReadings = [];
 const pressureAvgCount = 3;
 
-  // redis = require("redis"),
-  // client = redis.createClient(),
 Array.prototype.sum = Array.prototype.sum || function() {
   return this.reduce(function(sum, a) { return sum + Number(a) }, 0);
 }
@@ -73,10 +71,6 @@ var processMessage = function(incoming) {
   catch(e) {
     console.log('error', e);
   }
-};
-
-var addToRedis = function(message) {
-   client.set(message.key, JSON.stringify(message), redis.print);
 };
 
 var findPort = function(next) {
