@@ -109,7 +109,7 @@ export class Roast {
             min : 0,
             max: 900,
             labelsAngle : 45,
-            title : 'Seconds'
+            title : 'Time'
           },
           yaxis: {
             color: '#E74B00',

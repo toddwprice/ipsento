@@ -238,21 +238,21 @@ section {
   height: 11px;
 }
 
-.toolbar a, a.button {
+.toolbar a, a.button, button {
   cursor:pointer;
   font-size:15px;
   margin-right:20px;
-  color: #55504A;
+  color: #55504A !important;
   display: inline-block;
   min-width: 100px;
   padding: 10px 20px;
-  border: solid 1px #55504A;
-  border-radius: 3px;
+  border: solid 1px #55504A !important;
+  border-radius: 3px !important;
 }
 
-.toolbar a:hover, a.button:hover {
+.toolbar a:hover, a.button:hover, button:hover {
   text-decoration: none;
-  background-color: #55504A;
-  color: #fff;
-  border-color: #000;
+  background-color: #55504A !important;
+  color: #fff !important;
+  border-color: #000 !important;
 }

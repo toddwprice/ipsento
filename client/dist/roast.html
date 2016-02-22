@@ -12,7 +12,7 @@
   <require from="print"></require>
 
   <section class="au-animate" style="margin-top:15px;">
-    <form class="pure-form pure-form-stacked" if.bind="!isReady">
+    <form class="pure-form pure-form-stacked" if.bind="!isReady" submit.delegate="ready()">
         <fieldset>
 
             <label for="operator">Operator</label>
@@ -22,25 +22,24 @@
             </select>
 
             <label for="coffee">Batch Number</label>
-            <input id="coffee" type="text" style="width: 500px; max-width: 100%" placeholder="batch number" value.bind="roast.id">
+            <input id="coffee" type="text" style="width: 500px; max-width: 100%" placeholder="batch number" value.bind="roast.id" required>
 
             <label for="coffee">Coffee</label>
-            <input id="coffee" type="text" style="width: 500px; max-width: 100%" placeholder="enter coffee description" value.bind="roast.coffee">
+            <input id="coffee" type="text" style="width: 500px; max-width: 100%" placeholder="enter coffee description" value.bind="roast.coffee" required>
 
             <label for="weightIn">Weight In</label>
-            <input id="weightIn" type="number" step=".01" style="width: 500px; max-width: 100%" placeholder="weight in" value.bind="roast.weightIn">
+            <input id="weightIn" type="number" step=".01" style="width: 500px; max-width: 100%" placeholder="weight in" value.bind="roast.weightIn" required>
 
-            <label for="weightOut">Weight Out</label>
-            <input id="weightOut" type="number" step=".01" style="width: 500px; max-width: 100%" placeholder="weight out" value.bind="roast.weightOut">
-
-            <a class="button" style="margin-top:35px" click.trigger="ready()"><i class="fa fa-check"></i> Ready</a>
+            <div>
+              <button type="submit" style="margin-top:35px"><i class="fa fa-check"></i> Ready</button>
+            </div>
         </fieldset>
     </form>
 
     <div class="toolbar pure-g" if.bind="isReady">
       <div class="pure-u-10-24 toolbar-buttons">
-        <a if.bind="!jobRunning" click.trigger="startJob()"><i class="fa fa-play"></i> start</a>
-        <a if.bind="jobRunning" click.trigger="stopJob()"><i class="fa fa-stop"></i> stop</a>
+        <a if.bind="!jobRunning" click.trigger="startJob()"><i class="fa fa-play"></i> start roast</a>
+        <a if.bind="jobRunning" click.trigger="stopJob()"><i class="fa fa-stop"></i> end roast</a>
         <!--<a if.bind="jobRunning" click.trigger="stopJob()"><i class="fa fa-ellipsis-h"></i>
           <span if.bind="!showDetails" click.trigger="toggleDetails()">show details</span>
           <span if.bind="showDetails" click.trigger="toggleDetails()">hide details</span>
@@ -56,18 +55,12 @@
             <td>Bean Temp (&#8457;):</td>
             <td>Roaster Temp (&#8457;):</td>
             <td>Pressure (w.c.):</td>
-            <td>First Crack:</td>
-            <td>Target end (low):</td>
-            <td>Target end (high):</td>
           </tr>
           <tr>
             <td class="key-metric elapsed">${elapsed | dateFormat:'mm:ss'}</td>
             <td class="key-metric currentTemp">${currentBeanTemp | numberFormat:'0,0.0'}</td>
             <td class="key-metric currentTemp">${currentDrumTemp | numberFormat:'0,0.0'}</td>
             <td class="key-metric currentWc">${currentWc | numberFormat:'0,0.0'}</td>
-            <td class="key-metric currentWc">${roast.firstCrackTime | dateFormat:'mm:ss'}</td>
-            <td class="key-metric currentWc">${roast.firstCrackTime / 0.8 | dateFormat:'mm:ss'}</td>
-            <td class="key-metric currentWc">${roast.firstCrackTime / 0.75 | dateFormat:'mm:ss'}</td>
           </tr>
         </table>
       </div>
@@ -81,8 +74,40 @@
 
   </section>
 
+  <!--info below the graph -->
   <section>
+    <div class="pure-g" if.bind="isReady">
 
+      <div class="pure-u-10-24">
+        <form class="pure-form pure-form-stacked" if.bind="canSave" submit.delegate="ready()">
+            <fieldset>
+              <label for="weightOut">Weight Out</label>
+              <input id="weightOut" type="number" step=".01" style="width: 500px; max-width: 100%" placeholder="weight out" value.bind="roast.weightOut" required>
+            </fieldset>
+        </form>
+      </div>
+
+      <div class="pure-u-14-24">
+        <table>
+          <tr>
+            <td>First Crack:</td>
+            <td>Target end (low):</td>
+            <td>Target end (high):</td>
+          </tr>
+          <tr>
+            <td class="key-metric currentWc">${roast.firstCrackTime | dateFormat:'mm:ss'}</td>
+            <td class="key-metric currentWc">${roast.firstCrackTime / 0.8 | dateFormat:'mm:ss'}</td>
+            <td class="key-metric currentWc">${roast.firstCrackTime / 0.75 | dateFormat:'mm:ss'}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section if.bind="canSave">
+  </section>
+
+  <section>
     <table class="pure-table" id="dataStream" if.bind="showDetails">
       <thead>
         <tr>
