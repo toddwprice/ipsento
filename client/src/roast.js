@@ -20,6 +20,7 @@ export class Roast {
   currentWc;
   firstCrackSet = false;
   isSaved = false;
+  errorMessage = "";
 
   get user() {
     return JSON.parse(window.localStorage.currentUser);
@@ -182,6 +183,11 @@ export class Roast {
   }
 
   saveJob() {
+    this.errorMessage = "";
+    if (!this.roast.weightOut) {
+      this.errorMessage = "Please enter a weight out below the graph.";
+      return;
+    }
     this.roast.weightLoss = (this.roast.weightIn - this.roast.weightOut) / this.roast.weightIn;
     this.roast.graph = this.graph.download.getImageBase64('png');
     localStorage.lastRoast = JSON.stringify(this.roast);
