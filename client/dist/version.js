@@ -11,11 +11,11 @@ System.register([], function (_export) {
       Version = function Version() {
         _classCallCheck(this, Version);
 
-        this.versionNumber = "v1.2.0";
+        this.versionNumber = "v1.2.1";
       };
 
       _export("Version", Version);
     }
   };
 });
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInZlcnNpb24uanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7O01BQWEsT0FBTzs7Ozs7OztBQUFQLGFBQU8sWUFBUCxPQUFPOzhCQUFQLE9BQU87O2FBQ3BCLGFBQWEsR0FBRyxRQUFRIiwiZmlsZSI6InZlcnNpb24uanMiLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQgY2xhc3MgVmVyc2lvbiB7XHJcbnZlcnNpb25OdW1iZXIgPSBcInYxLjIuMFwiO1xyXG59Il0sInNvdXJjZVJvb3QiOiIvc291cmNlLyJ9
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInZlcnNpb24uanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7O01BQWEsT0FBTzs7Ozs7OztBQUFQLGFBQU8sWUFBUCxPQUFPOzhCQUFQLE9BQU87O2FBQ3BCLGFBQWEsR0FBRyxRQUFRIiwiZmlsZSI6InZlcnNpb24uanMiLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQgY2xhc3MgVmVyc2lvbiB7XHJcbnZlcnNpb25OdW1iZXIgPSBcInYxLjIuMVwiO1xyXG59Il0sInNvdXJjZVJvb3QiOiIvc291cmNlLyJ9
