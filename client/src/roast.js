@@ -17,7 +17,6 @@ export class Roast {
   currentDrumTemp;
   currentRoomTemp;
   currentPsi;
-  currentWc;
   firstCrackSet = false;
   isSaved = false;
   errorMessage = "";
@@ -72,7 +71,7 @@ export class Roast {
   startJob() {
     var self = this;
     this.roast.roastDate = (new Date()).toUTCString();
-    this.roast.startWc = this.currentWc;
+    this.roast.startPsi = this.currentPsi;
     this.jobRunning = true;
     window.localStorage.lastOperator = this.roast.operator;
     this.socket = io('http://localhost:8080');
@@ -85,7 +84,7 @@ export class Roast {
     var
       roomTemp = [],
       drumTemp = [],
-      waterColumns = [],
+      psi = [],
       beanTemp = [];
 
 
@@ -95,7 +94,7 @@ export class Roast {
         {data: roomTemp, label: 'room' },
         {data: drumTemp, label: 'drum' },
         {data: beanTemp, label: 'beans' },
-        {data: waterColumns, label: 'wc', lines: { fill: true }, yaxis: 2 },
+        {data: psi, label: 'psi', lines: { fill: true }, yaxis: 2 },
       ],
         {
           title : self.roast.id,
@@ -120,7 +119,7 @@ export class Roast {
           y2axis: {
             color: '#2566B7',
             max: parseInt(self.roasterSettings.wcHigh),
-            title: 'Water Columns'
+            title: 'PSI'
           },
           grid : {
             verticalLines : true,
@@ -141,13 +140,13 @@ export class Roast {
       self.currentRoomTemp = msg.roomTemp;
       self.currentDrumTemp = msg.drumTemp;
       self.currentPsi = msg.psi;
-      self.currentWc = msg.waterColumns;
+      // self.currentWc = msg.waterColumns;
       var currentX = self.elapsed / 1000;
 
       roomTemp.push([currentX, msg.roomTemp]);
       drumTemp.push([currentX, msg.drumTemp]);
       beanTemp.push([currentX, msg.beanTemp]);
-      waterColumns.push([currentX, msg.waterColumns]);
+      psi.push([currentX, msg.psi]);
 
 
       self.lastUpdated = new Date();

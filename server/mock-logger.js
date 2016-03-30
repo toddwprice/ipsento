@@ -35,7 +35,7 @@ setInterval(function () {
     sensor_time: time,
     roomTemp: roomTemp,
     drumTemp: drumTemp,
-    waterColumns: waterColumns + random(-0.1, 0.1),
+    // waterColumns: waterColumns + random(-0.1, 0.1),
     psi: waterColumns / 27.6799048425,
     beanTemp: beanTemp
   };
