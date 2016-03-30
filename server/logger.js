@@ -74,13 +74,21 @@ var processMessage = function(incoming) {
 };
 
 var findPort = function(next) {
+  console.log('Searching for FTDI...');
   sp.list(function (err, ports) {
+    var found = false;
     ports.forEach(function (port) {
-      if (port.comName.indexOf('usbserial') > -1) {
-        console.log('using:', port.comName);
-        next(port.comName);
+      if (port.pnpId.toUpperCase().indexOf('FTDI') > -1) {
+        console.log('using:', port.pnpId);
+        found = true;
+        return next(port.comName);
       }
     });
+
+    if (!found) {
+        console.log('No FTDI port found.');
+        process.exit();
+    }
   });
 };
 

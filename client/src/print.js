@@ -70,7 +70,8 @@ export class Print {
         },
         {
           image: this.roast.graph,
-          width: 160
+          width: 160,
+          height: 50
         }
 
       ],
