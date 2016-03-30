@@ -46,13 +46,14 @@ var getWC = function (psi) {
 };
 
 var getSmoothedPSI = function (psi) {
-  if (psi <= .02) psi = 0;
-  if (pressureReadings.length < pressureAvgCount) {
-    pressureReadings.push(psi);
-  }
-  else {
-    pressureReadings.shift();
-    pressureReadings.push(psi);
+  if (psi >= 0) {
+    if (pressureReadings.length < pressureAvgCount) {
+      pressureReadings.push(psi);
+    }
+    else {
+      pressureReadings.shift();
+      pressureReadings.push(psi);
+    }
   }
 
   return pressureReadings.average();
@@ -69,8 +70,8 @@ var processMessage = function(incoming) {
       sensor_time: message.dateTime,
       roomTemp: message.roomTemp,
       drumTemp: message.dt,
-      psi: message.psi,
-      waterColumns: getSmoothedPSI(message.psi),
+      psi: getSmoothedPSI(message.psi),
+      // waterColumns: getSmoothedPSI(message.psi),
       beanTemp: message.bt
     };
 

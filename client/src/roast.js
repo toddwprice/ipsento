@@ -20,6 +20,11 @@ export class Roast {
   firstCrackSet = false;
   isSaved = false;
   errorMessage = "";
+  roomTemp = [];
+  drumTemp = [];
+  psi = [];
+  beanTemp = [];
+  startTime = null;
 
   get user() {
     return JSON.parse(window.localStorage.currentUser);
@@ -42,6 +47,8 @@ export class Roast {
       operator: window.localStorage.lastOperator,
       roaster: this.roasterSettings.roasterId
     };
+
+    this.waitForNewJob();
   }
 
   ready() {
@@ -70,104 +77,17 @@ export class Roast {
 
   startJob() {
     var self = this;
+
+    this.roomTemp = [];
+    this.drumTemp = [];
+    this.psi = [];
+    this.beanTemp = [];
+
     this.roast.roastDate = (new Date()).toUTCString();
     this.roast.startPsi = this.currentPsi;
     this.jobRunning = true;
     window.localStorage.lastOperator = this.roast.operator;
-    this.socket = io('http://localhost:8080');
-    var container = document.getElementById("chart");
-    var ds = this.dataStream;
-    var startTime = new Date();
-
-    console.log(moment());
-
-    var
-      roomTemp = [],
-      drumTemp = [],
-      psi = [],
-      beanTemp = [];
-
-
-    var drawGraph = function () {
-      // Draw Graph
-      self.graph = Flotr.draw(container, [
-        {data: roomTemp, label: 'room' },
-        {data: drumTemp, label: 'drum' },
-        {data: beanTemp, label: 'beans' },
-        {data: psi, label: 'psi', lines: { fill: true }, yaxis: 2 },
-      ],
-        {
-          title : self.roast.id,
-          xaxis: {
-            mode: 'time',
-            showMinorLabels: true,
-            ticks: [0, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720, 780, 840, 900],
-            tickFormatter: function (n) {
-              // return n;
-              return moment('2000-01-01 00:00:00').add(moment.duration(n*1000)).format('mm:ss');
-            },
-            min : 0,
-            max: 900,
-            labelsAngle : 45,
-            title : 'Time'
-          },
-          yaxis: {
-            color: '#E74B00',
-            max : parseInt(self.roasterSettings.tempHigh),
-            title : 'Temperature'
-          },
-          y2axis: {
-            color: '#2566B7',
-            max: parseInt(self.roasterSettings.wcHigh),
-            title: 'PSI'
-          },
-          grid : {
-            verticalLines : true,
-            backgroundColor : 'white'
-          },
-          HtmlText : false,
-          legend : {
-            position : 'se'
-          }
-      });
-    };
-
-
-    this.socket.on('dataStream', function (msg) {
-      self.dataStream.push(msg);
-      self.elapsed = (new Date()) - startTime;
-      self.currentBeanTemp = msg.beanTemp;
-      self.currentRoomTemp = msg.roomTemp;
-      self.currentDrumTemp = msg.drumTemp;
-      self.currentPsi = msg.psi;
-      // self.currentWc = msg.waterColumns;
-      var currentX = self.elapsed / 1000;
-
-      roomTemp.push([currentX, msg.roomTemp]);
-      drumTemp.push([currentX, msg.drumTemp]);
-      beanTemp.push([currentX, msg.beanTemp]);
-      psi.push([currentX, msg.psi]);
-
-
-      self.lastUpdated = new Date();
-      self.hasData = true;
-
-      //after 9 minutes start listening for first crack at 395F
-      if (!self.firstCrackSet && self.elapsed > (0 * 60 * 1000) && self.currentBeanTemp >= 395) {
-        console.log('firstCrack:', self.elapsed);
-        self.roast.firstCrackTime = self.elapsed;
-        self.firstCrackSet = true;
-      }
-
-      if (!self.roast.startBeanTemp) {
-        self.roast.startBeanTemp = self.currentBeanTemp;
-        self.roast.startRoomTemp = self.currentRoomTemp;
-        self.roast.startDrumTemp = self.currentDrumTemp;
-      }
-
-      drawGraph();
-    });
-
+    this.startTime = new Date();
   }
 
   stopJob() {
@@ -191,5 +111,91 @@ export class Roast {
     this.roast.graph = this.graph.download.getImageBase64('png');
     localStorage.lastRoast = JSON.stringify(this.roast);
     this.isSaved = true;
+  }
+
+  waitForNewJob() {
+    var self = this;
+    this.socket = io('http://localhost:8080');
+    this.socket.on('dataStream', function (msg) {
+      self.dataStream.push(msg);
+      if (this.jobRunning) {
+        self.elapsed = (new Date()) - self.startTime;
+      }
+      self.currentBeanTemp = msg.beanTemp;
+      self.currentRoomTemp = msg.roomTemp;
+      self.currentDrumTemp = msg.drumTemp;
+      self.currentPsi = msg.psi;
+      // self.currentWc = msg.waterColumns;
+      var currentX = self.elapsed / 1000;
+
+      self.roomTemp.push([currentX, msg.roomTemp]);
+      self.drumTemp.push([currentX, msg.drumTemp]);
+      self.beanTemp.push([currentX, msg.beanTemp]);
+      self.psi.push([currentX, msg.psi]);
+
+
+      self.lastUpdated = new Date();
+      self.hasData = true;
+
+      //after 9 minutes start listening for first crack at 395F
+      if (!self.firstCrackSet && self.elapsed > (0 * 60 * 1000) && self.currentBeanTemp >= 395) {
+        console.log('firstCrack:', self.elapsed);
+        self.roast.firstCrackTime = self.elapsed;
+        self.firstCrackSet = true;
+      }
+
+      if (!self.roast.startBeanTemp) {
+        self.roast.startBeanTemp = self.currentBeanTemp;
+        self.roast.startRoomTemp = self.currentRoomTemp;
+        self.roast.startDrumTemp = self.currentDrumTemp;
+      }
+
+      self.drawGraph();
+    });
+  }
+
+
+  drawGraph() {
+    // Draw Graph
+    this.graph = Flotr.draw(document.getElementById("chart"), [
+      {data: this.roomTemp, label: 'room' },
+      {data: this.drumTemp, label: 'drum' },
+      {data: this.beanTemp, label: 'beans' },
+      {data: this.psi, label: 'psi', lines: { fill: true }, yaxis: 2 },
+    ],
+      {
+        title : this.roast.id,
+        xaxis: {
+          mode: 'time',
+          showMinorLabels: true,
+          ticks: [0, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720, 780, 840, 900],
+          tickFormatter: function (n) {
+            // return n;
+            return moment('2000-01-01 00:00:00').add(moment.duration(n*1000)).format('mm:ss');
+          },
+          min : 0,
+          max: 900,
+          labelsAngle : 45,
+          title : 'Time'
+        },
+        yaxis: {
+          color: '#E74B00',
+          max : parseInt(this.roasterSettings.tempHigh),
+          title : 'Temperature'
+        },
+        y2axis: {
+          color: '#2566B7',
+          max: parseInt(this.roasterSettings.wcHigh),
+          title: 'PSI'
+        },
+        grid : {
+          verticalLines : true,
+          backgroundColor : 'white'
+        },
+        HtmlText : false,
+        legend : {
+          position : 'se'
+        }
+    });
   }
 }
