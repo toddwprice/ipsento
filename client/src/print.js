@@ -39,10 +39,10 @@ export class Print {
               [lbl('Roaster'), this.roast.operator],
               [lbl('Equipment'), this.roast.roaster],
               [lbl('Roast start'), roastDate],
-              [lbl('Roast end'), endDate],
+              // [lbl('Roast end'), endDate],
               [lbl('Duration'), duration],
               [lbl('Bean (F)'), temp(this.roast.startBeanTemp) + ' | ' + temp(this.roast.endBeanTemp)],
-              [lbl('Drum (F)'), temp(this.roast.startDrumTemp) + ' | ' + temp(this.roast.endDrumTemp)],
+              [lbl('Roaster (F)'), temp(this.roast.startDrumTemp) + ' | ' + temp(this.roast.endDrumTemp)],
               [lbl('Room (F)'), temp(this.roast.startRoomTemp) + ' | ' + temp(this.roast.endRoomTemp)],
               [lbl('First crack'), firstCrack],
               [lbl('Weight in'), numeral(this.roast.weightIn).format('0.00')],
@@ -67,12 +67,12 @@ export class Print {
           //     ]
           // },
           layout: 'noBorders'
-        },
-        {
-          image: this.roast.graph,
-          width: 160,
-          height: 50
         }
+        // {
+        //   image: this.roast.graph,
+        //   width: 160,
+        //   height: 50
+        // }
 
       ],
       styles: {

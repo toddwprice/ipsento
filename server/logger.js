@@ -45,6 +45,19 @@ var getWC = function (psi) {
   return pressureReadings.average() * 67;
 };
 
+var getSmoothedPSI = function (psi) {
+  if (psi <= .02) psi = 0;
+  if (pressureReadings.length < pressureAvgCount) {
+    pressureReadings.push(psi);
+  }
+  else {
+    pressureReadings.shift();
+    pressureReadings.push(psi);
+  }
+
+  return pressureReadings.average();
+};
+
 var processMessage = function(incoming) {
   try {
     var message = JSON.parse(incoming);
@@ -57,7 +70,7 @@ var processMessage = function(incoming) {
       roomTemp: message.roomTemp,
       drumTemp: message.dt,
       psi: message.psi,
-      waterColumns: getWC(message.psi),
+      waterColumns: getSmoothedPSI(message.psi),
       beanTemp: message.bt
     };
 
